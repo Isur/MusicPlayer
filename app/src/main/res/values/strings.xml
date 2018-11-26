@@ -2,7 +2,7 @@
     <string name="app_name">Music Player</string>
     <string name="title">Title:</string>
     <string name="author">Author:</string>
-    <string name="margin">5dp</string>
+    <!--<string name="margin">5dp</string>-->
     <string name="trackimage">TrackImage</string>
     <string name="randomtrackimagebutton">RandomTrackImageButton</string>
     <string name="repeatlistimagebutton">RepeatListImageButton</string>

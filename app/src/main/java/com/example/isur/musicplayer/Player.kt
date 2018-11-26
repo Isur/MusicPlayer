@@ -61,7 +61,7 @@ class Player : AppCompatActivity() {
         mEndDurationTextView = findViewById<TextView>(R.id.DurationEndTextView)
 
 
-        mMediaPlayer = MediaPlayer.create(applicationContext, 1)
+       // mMediaPlayer = MediaPlayer.create(applicationContext, 1)
     }
 
 

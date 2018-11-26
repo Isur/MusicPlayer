@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".Player">
 
     <ImageView
         android:id="@+id/TrackImage"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/trackimage"
@@ -21,7 +21,7 @@
         android:layout_below="@+id/TrackImage"
         android:text="@string/title"
         android:textSize="30sp"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
         />
 
     <TextView
@@ -33,7 +33,7 @@
         android:layout_toEndOf="@+id/TitleTextView"
         android:layout_toRightOf="@id/TitleTextView"
         android:layout_below="@+id/TrackImage"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
         android:layout_alignBaseline="@id/TitleTextView"
         />
 
@@ -44,7 +44,7 @@
         android:text="@string/author"
         android:textSize="30sp"
         android:layout_below="@id/TitleTextView"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
 
         />
     <TextView
@@ -56,7 +56,7 @@
         android:textSize="20sp"
         android:layout_toRightOf="@id/AuthorTextView"
         android:layout_toEndOf="@id/AuthorTextView"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
         />
 
     <TextView
@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0:00"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
         android:layout_alignLeft="@+id/DurationSeekBar"
         android:layout_alignStart="@+id/DurationSeekBar"
         android:layout_below="@id/AuthorTextView"
@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="6:00"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
         android:layout_alignRight="@+id/DurationSeekBar"
         android:layout_alignEnd="@+id/DurationSeekBar"
         android:layout_below="@id/AuthorTextView"
@@ -86,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3:00"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/AuthorTextView"
         />
@@ -94,23 +94,24 @@
 
     <SeekBar
         android:id="@+id/DurationSeekBar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/DurationBeginTextView"
-        android:layout_margin="@string/margin"
+        android:layout_margin="5dp"
         />
 
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
 
         <ImageView
             android:id="@+id/RandomTrackImageButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@string/margin"
+            android:layout_margin="5dp"
             android:contentDescription="@string/randomtrackimagebutton"
             app:srcCompat="@drawable/ic_shuffle_off"
             />
@@ -118,35 +119,36 @@
             android:id="@+id/PreviousTrackImageButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@string/margin"
+            android:layout_margin="5dp"
             android:contentDescription="@string/previoustrackimagebutton"
             app:srcCompat="@drawable/ic_previous"
             />
 
         <ImageView
             android:id="@+id/PlayPauseImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@string/margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:contentDescription="@string/playpauseimagebutton"
             app:srcCompat="@drawable/ic_play" />
         <ImageView
             android:id="@+id/NextTrackImageButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@string/margin"
+            android:layout_margin="5dp"
             android:contentDescription="@string/nexttrackimagebutton"
             app:srcCompat="@drawable/ic_next"
             />
         <ImageView
             android:id="@+id/RepeatListImageButton"
             android:layout_height="fill_parent"
-            android:layout_margin="@string/margin"
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
             android:contentDescription="@string/repeatlistimagebutton"
             app:srcCompat="@drawable/ic_repeat_off"
 
             />
-    </View>
+    </LinearLayout>
 
 
 
