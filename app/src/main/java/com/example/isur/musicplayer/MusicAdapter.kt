@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.mtechviral.mplaylib.MusicFinder
+import kotlinx.android.synthetic.main.list_item_song.view.*
 
 class MusicAdapter(private val context: Context, private val dataSource: List<MusicFinder.Song>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
@@ -73,20 +74,27 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
         durationTextView.text = songDuration
 
         view.setOnClickListener {
-            goToPlayer(song)
+            goToPlayer(song, position)
         }
 
         return view
     }
 
-    fun goToPlayer(song: MusicFinder.Song){
+    fun goToPlayer(song: MusicFinder.Song, position: Int){
         val intent = Intent(context, Player::class.java)
+        val allSongsUri = arrayOf<String>()
+        dataSource.map {
+            allSongsUri.plus(it.uri.toString())
+        }
+
         intent.putExtra("source", song.uri.toString())
         intent.putExtra("title", song.title.toString())
         intent.putExtra("duration", song.duration.toString())
         intent.putExtra("album",song.album.toString())
         intent.putExtra("artist", song.artist.toString())
         intent.putExtra("albumArt", song.albumArt.toString())
+        intent.putExtra("position", position)
+        intent.putExtra("allSongsUri", allSongsUri)
         startActivity(context, intent, null)
     }
 

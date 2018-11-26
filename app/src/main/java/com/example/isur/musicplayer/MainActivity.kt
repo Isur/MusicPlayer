@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         val musicFinder = MusicFinder(contentResolver)
         musicFinder.prepare()
         val songList = musicFinder.allSongs
-        listView = findViewById(R.id.songList)
+        listView = this.findViewById(R.id.songList)
         val adapter = MusicAdapter(this, songList)
         listView.adapter = adapter
 
