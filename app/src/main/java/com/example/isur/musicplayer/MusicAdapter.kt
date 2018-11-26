@@ -84,6 +84,9 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
         intent.putExtra("source", song.uri.toString())
         intent.putExtra("title", song.title.toString())
         intent.putExtra("duration", song.duration.toString())
+        intent.putExtra("album",song.album.toString())
+        intent.putExtra("artist", song.artist.toString())
+        intent.putExtra("albumArt", song.albumArt.toString())
         startActivity(context, intent, null)
     }
 
