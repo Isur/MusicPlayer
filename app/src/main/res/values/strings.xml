@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Music Player</string>
+    <string name="title">Title:</string>
+    <string name="author">Author:</string>
+    <string name="margin">5dp</string>
+    <string name="trackimage">TrackImage</string>
+    <string name="randomtrackimagebutton">RandomTrackImageButton</string>
+    <string name="repeatlistimagebutton">RepeatListImageButton</string>
+    <string name="nexttrackimagebutton">NextTrackImageButton</string>
+    <string name="playpauseimagebutton">PlayPauseImageButton</string>
+    <string name="previoustrackimagebutton">PreviousTrackImageButton</string>
+    <string name="jakis_autor">Jakis autor</string>
+    <string name="jakis_tekst">Jakis tekst</string>
 </resources>
