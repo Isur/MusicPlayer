@@ -3,6 +3,7 @@ package com.example.isur.musicplayer
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,10 +83,11 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
 
     fun goToPlayer(song: MusicFinder.Song, position: Int){
         val intent = Intent(context, Player::class.java)
-        val allSongsUri = arrayOf<String>()
-        dataSource.map {
-            allSongsUri.plus(it.uri.toString())
+        var allSongsUri = arrayOf<String>()
+        dataSource.forEach {
+            allSongsUri = allSongsUri.plus(it.uri.toString())
         }
+
 
         intent.putExtra("source", song.uri.toString())
         intent.putExtra("title", song.title.toString())
