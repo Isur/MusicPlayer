@@ -1,9 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Player">
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/TrackImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/trackimage"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/TitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TrackImage"
+        android:text="@string/title"
+        android:textSize="30sp"
+        android:layout_margin="@string/margin"
+        />
+
+    <TextView
+        android:id="@+id/TitleNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/jakis_tekst"
+        android:layout_toEndOf="@+id/TitleTextView"
+        android:layout_toRightOf="@id/TitleTextView"
+        android:layout_below="@+id/TrackImage"
+        android:layout_margin="@string/margin"
+        android:layout_alignBaseline="@id/TitleTextView"
+        />
+
+    <TextView
+        android:id="@+id/AuthorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/author"
+        android:textSize="30sp"
+        android:layout_below="@id/TitleTextView"
+        android:layout_margin="@string/margin"
+
+        />
+    <TextView
+        android:id="@+id/AuthorNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/AuthorTextView"
+        android:text="@string/jakis_autor"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/AuthorTextView"
+        android:layout_toEndOf="@id/AuthorTextView"
+        android:layout_margin="@string/margin"
+        />
+
+    <TextView
+        android:id="@+id/DurationBeginTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        android:layout_margin="@string/margin"
+        android:layout_alignLeft="@+id/DurationSeekBar"
+        android:layout_alignStart="@+id/DurationSeekBar"
+        android:layout_below="@id/AuthorTextView"
+        />
+
+    <TextView
+        android:id="@+id/DurationEndTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="6:00"
+        android:layout_margin="@string/margin"
+        android:layout_alignRight="@+id/DurationSeekBar"
+        android:layout_alignEnd="@+id/DurationSeekBar"
+        android:layout_below="@id/AuthorTextView"
+        />
+
+    <TextView
+        android:id="@+id/DurationCurrentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3:00"
+        android:layout_margin="@string/margin"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/AuthorTextView"
+        />
+
+
+    <SeekBar
+        android:id="@+id/DurationSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DurationBeginTextView"
+        android:layout_margin="@string/margin"
+        />
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+
+        <ImageView
+            android:id="@+id/RandomTrackImageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@string/margin"
+            android:contentDescription="@string/randomtrackimagebutton"
+            app:srcCompat="@drawable/ic_shuffle_off"
+            />
+        <ImageView
+            android:id="@+id/PreviousTrackImageButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@string/margin"
+            android:contentDescription="@string/previoustrackimagebutton"
+            app:srcCompat="@drawable/ic_previous"
+            />
+
+        <ImageView
+            android:id="@+id/PlayPauseImageButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@string/margin"
+            android:contentDescription="@string/playpauseimagebutton"
+            app:srcCompat="@drawable/ic_play" />
+        <ImageView
+            android:id="@+id/NextTrackImageButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@string/margin"
+            android:contentDescription="@string/nexttrackimagebutton"
+            app:srcCompat="@drawable/ic_next"
+            />
+        <ImageView
+            android:id="@+id/RepeatListImageButton"
+            android:layout_height="fill_parent"
+            android:layout_margin="@string/margin"
+            android:contentDescription="@string/repeatlistimagebutton"
+            app:srcCompat="@drawable/ic_repeat_off"
+
+            />
+    </View>
+
+
+
+</RelativeLayout>
