@@ -3,7 +3,6 @@ package com.example.isur.musicplayer
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,9 +35,9 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
         if (convertView == null) {
             view = inflater.inflate(R.layout.list_item_song, parent, false)
             holder = ViewHolder()
-            holder.titleTextView = view.findViewById(R.id.Title) as TextView
-            holder.artistTextView = view.findViewById(R.id.Author) as TextView
-            holder.durationTextView = view.findViewById(R.id.Duration) as TextView
+            holder.titleTextView = view.Title
+            holder.artistTextView = view.Author
+            holder.durationTextView = view.Duration
             view.tag = holder
         } else {
             view = convertView
@@ -52,23 +51,22 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
         titleTextView.text = song.title
         artistTextView.text = song.artist
         val duration = song.duration
-        val songMin = if (duration > 60000) (duration / 60000).toInt() else 0
 
         var songDuration: String
         if (duration > 60000) {
             songDuration = (duration / 60000).toInt().toString() + ":"
             val sec = ((duration % 60000) / 1000).toInt()
-            if (sec < 10) {
-                songDuration += "0$sec"
+            songDuration += if (sec < 10) {
+                "0$sec"
             } else {
-                songDuration += sec
+                sec
             }
         } else {
             val sec = (duration / 1000).toInt()
-            if (sec < 10) {
-                songDuration = "0$sec"
+            songDuration = if (sec < 10) {
+                "0$sec"
             } else {
-                songDuration = sec.toString()
+                sec.toString()
             }
         }
 
@@ -81,22 +79,28 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
         return view
     }
 
-    fun goToPlayer(song: MusicFinder.Song, position: Int){
+    private fun goToPlayer(song: MusicFinder.Song, position: Int) {
         val intent = Intent(context, Player::class.java)
-        var allSongsUri = arrayOf<String>()
+        val allSongsUri = mutableListOf<String>()
+        val allTitles = mutableListOf<String>()
+        val allAuthors = mutableListOf<String>()
         dataSource.forEach {
-            allSongsUri = allSongsUri.plus(it.uri.toString())
+            allSongsUri.add(it.uri.toString())
+            allTitles.add(it.title.toString())
+            allAuthors.add(it.artist.toString())
         }
 
 
         intent.putExtra("source", song.uri.toString())
         intent.putExtra("title", song.title.toString())
         intent.putExtra("duration", song.duration.toString())
-        intent.putExtra("album",song.album.toString())
+        intent.putExtra("album", song.album.toString())
         intent.putExtra("artist", song.artist.toString())
         intent.putExtra("albumArt", song.albumArt.toString())
         intent.putExtra("position", position)
-        intent.putExtra("allSongsUri", allSongsUri)
+        intent.putExtra("allSongsUri", allSongsUri.toTypedArray())
+        intent.putExtra("allAuthors", allAuthors.toTypedArray())
+        intent.putExtra("allTitles", allTitles.toTypedArray())
         startActivity(context, intent, null)
     }
 
