@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context=".Player">
 
     <ImageView
@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/trackimage"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:srcCompat="@drawable/ic_launcher_background"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/TitleTextView"
@@ -94,7 +95,7 @@
 
     <SeekBar
         android:id="@+id/DurationSeekBar"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/DurationBeginTextView"
         android:layout_margin="5dp"
@@ -104,7 +105,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@+id/DurationSeekBar"
+        android:layout_centerHorizontal="true">
 
 
         <ImageView
@@ -117,7 +120,7 @@
             />
         <ImageView
             android:id="@+id/PreviousTrackImageButton"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:contentDescription="@string/previoustrackimagebutton"
@@ -133,7 +136,7 @@
             app:srcCompat="@drawable/ic_play" />
         <ImageView
             android:id="@+id/NextTrackImageButton"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:contentDescription="@string/nexttrackimagebutton"
@@ -141,7 +144,7 @@
             />
         <ImageView
             android:id="@+id/RepeatListImageButton"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_margin="5dp"
             android:contentDescription="@string/repeatlistimagebutton"
