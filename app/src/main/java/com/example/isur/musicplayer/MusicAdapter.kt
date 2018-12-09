@@ -28,10 +28,8 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-
         val view: View
         val holder: ViewHolder
-
         if (convertView == null) {
             view = inflater.inflate(R.layout.list_item_song, parent, false)
             holder = ViewHolder()
@@ -46,12 +44,10 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
         val titleTextView = holder.titleTextView
         val artistTextView = holder.artistTextView
         val durationTextView = holder.durationTextView
-
         val song = getItem(position) as MusicFinder.Song
         titleTextView.text = song.title
         artistTextView.text = song.artist
         val duration = song.duration
-
         var songDuration: String
         if (duration > 60000) {
             songDuration = (duration / 60000).toInt().toString() + ":"
@@ -69,13 +65,10 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
                 sec.toString()
             }
         }
-
         durationTextView.text = songDuration
-
         view.setOnClickListener {
             goToPlayer(song, position)
         }
-
         return view
     }
 
@@ -89,7 +82,6 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
             allTitles.add(it.title.toString())
             allAuthors.add(it.artist.toString())
         }
-
         intent.putExtra("source", song.uri.toString())
         intent.putExtra("title", song.title.toString())
         intent.putExtra("duration", song.duration.toString())
@@ -108,5 +100,4 @@ class MusicAdapter(private val context: Context, private val dataSource: List<Mu
         lateinit var artistTextView: TextView
         lateinit var durationTextView: TextView
     }
-
 }

@@ -1,9 +1,7 @@
 package com.example.isur.musicplayer
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
@@ -14,7 +12,6 @@ class MusicPlayerService : Service() {
 
     private val myBinder = LocalBinder()
     private var uri: Array<Uri> = arrayOf()
-    //private var context: Context = applicationContext
     private var randomTrack = false
     private var repeatList = false
     private var currentTrackIndex: Int = 0
@@ -23,9 +20,8 @@ class MusicPlayerService : Service() {
     private var mediaPlayer: MediaPlayer = MediaPlayer()
     private var isEnd = false
     private var currPos: Int = 0
-    var playing = false
-    var init = false
-
+    private var playing = false
+    private var init = false
 
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -51,49 +47,40 @@ class MusicPlayerService : Service() {
         return myBinder
     }
 
-    override fun onRebind(intent: Intent?) {
-        super.onRebind(intent)
-        Log.i("test", "REBIND?")
-    }
+//     fun SetResource(uri: Array<Uri>) {
+//        this.uri = uri
+//    }
 
-    fun SetResource(uri: Array<Uri>) {
-        this.uri = uri
-    }
-
-    fun SetContext(contex: Context) {
-        //  this.context = context
-    }
-
-    fun SelectTrack(index: Int) {
+    fun selectTrack(index: Int) {
         currentTrackIndex = index
         changeSong()
-        if(playing) mediaPlayer.start()
+        if (playing) mediaPlayer.start()
     }
 
-    fun NextTrack() {
+    fun nextTrack() {
         selectNextTrack(true)
         changeSong()
         if (playing) mediaPlayer.start()
     }
 
-    fun Run() {
+    fun run() {
         init = true
         mediaPlayer = MediaPlayer.create(applicationContext, uri[currentTrackIndex])
         setMediaPlayerCompletionListener()
         if (playing) {
             mediaPlayer.start()
         }
-        SeekTo(currPos)
+        seekTo(currPos)
 
     }
 
-    fun PreviousTrack() {
+    fun previousTrack() {
         selectNextTrack(false)
         changeSong()
         if (playing) mediaPlayer.start()
     }
 
-    fun Play() {
+    fun play() {
         if (isEnd) {
             mediaPlayer = MediaPlayer.create(applicationContext, uri[0])
             isEnd = false
@@ -102,72 +89,64 @@ class MusicPlayerService : Service() {
         playing = true
     }
 
-    fun Stop() {
-        playing = false
-        mediaPlayer.stop()
-    }
-
-    fun Pause() {
+    fun pause() {
         playing = false
         mediaPlayer.pause()
     }
 
-    fun RandomOnOff() {
+    fun randomOnOff() {
         randomTrack = !randomTrack
     }
 
-    fun RepeatOnOff() {
+    fun repeatOnOff() {
         repeatList = !repeatList
     }
 
-    fun PlayPause() {
+    fun playPause() {
         if (playing) {
-            Pause()
+            pause()
         } else {
-            Play()
+            play()
         }
     }
 
-    fun GetPosition(): Int {
+    fun getPosition(): Int {
         return mediaPlayer.currentPosition
     }
 
-    fun GetDuration(): Int {
+    fun getDuration(): Int {
         return mediaPlayer.duration
     }
 
-    fun GetTitile(): String {
+    fun getTitle(): String {
         return authors[currentTrackIndex]
     }
 
-    fun GetAuthor(): String {
+    fun getAuthor(): String {
         return titles[currentTrackIndex]
     }
 
-    fun GetTrack(): Int {
+    fun getTrack(): Int {
         return currentTrackIndex
     }
 
-    fun SeekTo(msec: Int) {
+    fun seekTo(msec: Int) {
         mediaPlayer.seekTo(msec)
     }
 
-    fun IsPlaying(): Boolean {
+    fun isPlaying(): Boolean {
         return playing
     }
 
-    fun IsRandom(): Boolean {
-        return randomTrack
-    }
+    fun isInit(): Boolean = init
 
-    fun IsRepeat(): Boolean {
-        return repeatList
-    }
-
-    override fun toString(): String {
-        return "${titles[currentTrackIndex]} - ${mediaPlayer.duration} - ${mediaPlayer.currentPosition}"
-
-    }
+//    fun isRandom(): Boolean {
+//        return randomTrack
+//    }
+//
+//    fun isRepeat(): Boolean {
+//        return repeatList
+//    }
 
     private fun selectNextTrack(next: Boolean) {
         if (randomTrack) {
@@ -202,7 +181,7 @@ class MusicPlayerService : Service() {
 
     private fun setMediaPlayerCompletionListener() {
         mediaPlayer.setOnCompletionListener {
-            NextTrack()
+            nextTrack()
         }
     }
 

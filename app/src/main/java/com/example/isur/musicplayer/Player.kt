@@ -1,6 +1,5 @@
 package com.example.isur.musicplayer
 
-import android.support.v7.app.AppCompatActivity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -8,41 +7,34 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.SeekBar
-import com.example.isur.musicplayer.R.id.DurationCurrentTextView
 import kotlinx.android.synthetic.main.activity_player.*
-import android.app.ActivityManager
-
 
 class Player : AppCompatActivity() {
-
-    private var musicPlayerService: MusicPlayerService? = null
-    var isBound = false
-
     private lateinit var runnable: O
+    var isBound = false
+    private var musicPlayerService: MusicPlayerService? = null
     private var handler: Handler = Handler()
     private var randomOn = false
     private var repeatOn = false
     private var play = true
-
     private var songList: Array<String> = arrayOf()
     private var authorList: Array<String> = arrayOf()
     private var titlesList: Array<String> = arrayOf()
     private var position: Int = 0
     private var currPos: Int = 0
 
-
     private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName,
-                                        service: IBinder) {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as MusicPlayerService.LocalBinder
             musicPlayerService = binder.getService()
             isBound = true
-            if (musicPlayerService?.init == false) {
-                musicPlayerService?.Run()
-            } else if(position != musicPlayerService?.GetTrack()) {
-                musicPlayerService?.SelectTrack(position)
+            if (musicPlayerService?.isInit() == false) {
+                musicPlayerService?.run()
+            } else if (position != musicPlayerService?.getTrack()) {
+                musicPlayerService?.selectTrack(position)
             }
         }
 
@@ -65,28 +57,25 @@ class Player : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-
         outState?.putStringArray("songList", songList)
         outState?.putStringArray("authorList", authorList)
         outState?.putStringArray("titlesList", titlesList)
-        outState?.putInt("pos", musicPlayerService?.GetPosition() as Int)
-        outState?.putInt("position", musicPlayerService?.GetTrack() as Int)
-        outState?.putBoolean("playing", musicPlayerService?.playing as Boolean)
+        outState?.putInt("pos", musicPlayerService?.getPosition() as Int)
+        outState?.putInt("position", musicPlayerService?.getTrack() as Int)
+        outState?.putBoolean("playing", musicPlayerService?.isPlaying() as Boolean)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        Log.i("test", "ON RESTORE")
         songList = savedInstanceState?.getStringArray("songList") as Array<String>
         authorList = savedInstanceState.getStringArray("authorList") as Array<String>
         titlesList = savedInstanceState.getStringArray("titlesList") as Array<String>
         position = savedInstanceState.getInt("position")
         currPos = savedInstanceState.getInt("pos")
         play = savedInstanceState.getBoolean("playing")
-
     }
 
-    fun binder() {
+    private fun binder() {
         val int = Intent(this, MusicPlayerService::class.java)
         int.putExtra("SongList", songList)
         int.putExtra("AuthorList", authorList)
@@ -105,8 +94,8 @@ class Player : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        position = musicPlayerService?.GetTrack() as Int
-        currPos = musicPlayerService?.GetPosition() as Int
+        position = musicPlayerService?.getTrack() as Int
+        currPos = musicPlayerService?.getPosition() as Int
         handler.removeCallbacks(runnable)
         isBound = false
         unbindService(connection)
@@ -114,17 +103,17 @@ class Player : AppCompatActivity() {
 
     private fun setupComponents() {
         PreviousTrackImageButton.setOnClickListener {
-            musicPlayerService?.PreviousTrack()
+            musicPlayerService?.previousTrack()
         }
 
         NextTrackImageButton.setOnClickListener {
-            musicPlayerService?.NextTrack()
+            musicPlayerService?.nextTrack()
         }
 
         PlayPauseImageButton.setOnClickListener {
-            musicPlayerService?.PlayPause()
+            musicPlayerService?.playPause()
 
-            if (!musicPlayerService!!.playing) {
+            if (!musicPlayerService!!.isPlaying()) {
                 PlayPauseImageButton.setImageResource(R.drawable.ic_play)
             } else {
                 PlayPauseImageButton.setImageResource(R.drawable.ic_pause)
@@ -132,7 +121,7 @@ class Player : AppCompatActivity() {
         }
 
         RandomTrackImageButton.setOnClickListener {
-            musicPlayerService?.RandomOnOff()
+            musicPlayerService?.randomOnOff()
             randomOn = !randomOn
             if (randomOn) {
                 RandomTrackImageButton.setImageResource(R.drawable.ic_shuffle_on)
@@ -142,7 +131,7 @@ class Player : AppCompatActivity() {
         }
 
         RepeatListImageButton.setOnClickListener {
-            musicPlayerService?.RepeatOnOff()
+            musicPlayerService?.repeatOnOff()
             repeatOn = !repeatOn
             if (repeatOn) {
                 RepeatListImageButton.setImageResource(R.drawable.ic_repeat_on)
@@ -154,16 +143,16 @@ class Player : AppCompatActivity() {
         DurationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 if (b) {
-                    musicPlayerService?.SeekTo(i)
+                    musicPlayerService?.seekTo(i)
                 }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-                musicPlayerService?.Pause()
+                musicPlayerService?.pause()
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                musicPlayerService?.Play()
+                musicPlayerService?.play()
             }
         })
     }
@@ -171,29 +160,29 @@ class Player : AppCompatActivity() {
     private fun initializeView() {
         runnable = O()
         handler.postDelayed(runnable, 100)
-        if(position != musicPlayerService?.GetTrack()){
-            musicPlayerService?.SelectTrack(position)
+        if (position != musicPlayerService?.getTrack()) {
+            musicPlayerService?.selectTrack(position)
         }
     }
 
     inner class O : Runnable {
         override fun run() {
-
             if (isBound) {
-                DurationSeekBar.max = musicPlayerService!!.GetDuration()
-                DurationSeekBar.progress = musicPlayerService!!.GetPosition()
-                DurationCurrentTextView.text = minSecTime(musicPlayerService?.GetPosition())
-                DurationEndTextView.text = minSecTime(musicPlayerService?.GetDuration())
-                AuthorNameTextView.text = musicPlayerService?.GetAuthor()
-                TitleNameTextView.text = musicPlayerService?.GetTitile()
+                DurationSeekBar.max = musicPlayerService!!.getDuration()
+                DurationSeekBar.progress = musicPlayerService!!.getPosition()
+                DurationCurrentTextView.text = minSecTime(musicPlayerService?.getPosition())
+                DurationEndTextView.text = minSecTime(musicPlayerService?.getDuration())
+                AuthorNameTextView.text = musicPlayerService?.getAuthor()
+                TitleNameTextView.text = musicPlayerService?.getTitle()
+                if (!musicPlayerService!!.isPlaying()) {
+                    PlayPauseImageButton.setImageResource(R.drawable.ic_play)
+                } else {
+                    PlayPauseImageButton.setImageResource(R.drawable.ic_pause)
+                }
                 handler.postDelayed(this, 100)
             }
-
         }
-
-
     }
-
 
     private fun minSecTime(msec: Int?): String {
         if (msec == null) return minSecTime(0)
@@ -206,5 +195,4 @@ class Player : AppCompatActivity() {
             "$min:$restMin"
         }
     }
-
 }

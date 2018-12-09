@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
         when (requestCode) {
             101 -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
@@ -53,9 +54,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-    }
-
 }
