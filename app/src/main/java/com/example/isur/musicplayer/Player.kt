@@ -12,25 +12,38 @@ import android.util.Log
 import android.widget.SeekBar
 import com.example.isur.musicplayer.R.id.DurationCurrentTextView
 import kotlinx.android.synthetic.main.activity_player.*
+import android.app.ActivityManager
+
 
 class Player : AppCompatActivity() {
 
     private var musicPlayerService: MusicPlayerService? = null
     var isBound = false
 
-    private lateinit var runnable:Runnable
+    private lateinit var runnable: O
     private var handler: Handler = Handler()
     private var randomOn = false
     private var repeatOn = false
     private var play = true
 
+    private var songList: Array<String> = arrayOf()
+    private var authorList: Array<String> = arrayOf()
+    private var titlesList: Array<String> = arrayOf()
+    private var position: Int = 0
+    private var currPos: Int = 0
+
+
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName,
                                         service: IBinder) {
-            Log.i("test", "connection")
             val binder = service as MusicPlayerService.LocalBinder
             musicPlayerService = binder.getService()
             isBound = true
+            if (musicPlayerService?.init == false) {
+                musicPlayerService?.Run()
+            } else if(position != musicPlayerService?.GetTrack()) {
+                musicPlayerService?.SelectTrack(position)
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
@@ -40,28 +53,64 @@ class Player : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("test", "ON CREATE")
         setContentView(R.layout.activity_player)
-
+        songList = intent.getStringArrayExtra("allSongsUri")
+        authorList = intent.getStringArrayExtra("allAuthors")
+        titlesList = intent.getStringArrayExtra("allTitles")
+        position = intent.getIntExtra("position", 0)
+        currPos = intent.getIntExtra("pos", 0)
         setupComponents()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.putStringArray("songList", songList)
+        outState?.putStringArray("authorList", authorList)
+        outState?.putStringArray("titlesList", titlesList)
+        outState?.putInt("pos", musicPlayerService?.GetPosition() as Int)
+        outState?.putInt("position", musicPlayerService?.GetTrack() as Int)
+        outState?.putBoolean("playing", musicPlayerService?.playing as Boolean)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Log.i("test", "ON RESTORE")
+        songList = savedInstanceState?.getStringArray("songList") as Array<String>
+        authorList = savedInstanceState.getStringArray("authorList") as Array<String>
+        titlesList = savedInstanceState.getStringArray("titlesList") as Array<String>
+        position = savedInstanceState.getInt("position")
+        currPos = savedInstanceState.getInt("pos")
+        play = savedInstanceState.getBoolean("playing")
+
+    }
+
+    fun binder() {
+        val int = Intent(this, MusicPlayerService::class.java)
+        int.putExtra("SongList", songList)
+        int.putExtra("AuthorList", authorList)
+        int.putExtra("TitlesList", titlesList)
+        int.putExtra("Index", position)
+        int.putExtra("pos", currPos)
+        int.putExtra("playing", play)
+        bindService(int, connection, Context.BIND_AUTO_CREATE)
+        initializeView()
     }
 
     override fun onResume() {
         super.onResume()
-        val int = Intent(this, MusicPlayerService::class.java)
-        int.putExtra("SongList", intent.getStringArrayExtra("allSongsUri"))
-        int.putExtra("Index", intent.getIntExtra("position", 0))
-        bindService(intent, connection, Context.BIND_AUTO_CREATE)
-        musicPlayerService?.Run()
-        initializeView()
+        binder()
     }
-
 
     override fun onPause() {
         super.onPause()
+        position = musicPlayerService?.GetTrack() as Int
+        currPos = musicPlayerService?.GetPosition() as Int
+        handler.removeCallbacks(runnable)
+        isBound = false
         unbindService(connection)
     }
-
-
 
     private fun setupComponents() {
         PreviousTrackImageButton.setOnClickListener {
@@ -74,9 +123,8 @@ class Player : AppCompatActivity() {
 
         PlayPauseImageButton.setOnClickListener {
             musicPlayerService?.PlayPause()
-            play = !play
 
-            if(play) {
+            if (!musicPlayerService!!.playing) {
                 PlayPauseImageButton.setImageResource(R.drawable.ic_play)
             } else {
                 PlayPauseImageButton.setImageResource(R.drawable.ic_pause)
@@ -86,7 +134,7 @@ class Player : AppCompatActivity() {
         RandomTrackImageButton.setOnClickListener {
             musicPlayerService?.RandomOnOff()
             randomOn = !randomOn
-            if(randomOn) {
+            if (randomOn) {
                 RandomTrackImageButton.setImageResource(R.drawable.ic_shuffle_on)
             } else {
                 RandomTrackImageButton.setImageResource(R.drawable.ic_shuffle_off)
@@ -96,7 +144,7 @@ class Player : AppCompatActivity() {
         RepeatListImageButton.setOnClickListener {
             musicPlayerService?.RepeatOnOff()
             repeatOn = !repeatOn
-            if(repeatOn) {
+            if (repeatOn) {
                 RepeatListImageButton.setImageResource(R.drawable.ic_repeat_on)
             } else {
                 RepeatListImageButton.setImageResource(R.drawable.ic_repeat_off)
@@ -121,29 +169,38 @@ class Player : AppCompatActivity() {
     }
 
     private fun initializeView() {
-        runnable = Runnable {
-            Log.i("test", isBound.toString())
-            if(isBound) {
-
-//                DurationSeekBar.max = musicPlayerService!!.GetDuration()
-//                DurationSeekBar.progress = musicPlayerService!!.GetPosition()
-//                DurationCurrentTextView.text = minSecTime(musicPlayerService?.GetPosition())
-//                DurationEndTextView.text = minSecTime(musicPlayerService?.GetDuration())
-//                AuthorNameTextView.text = musicPlayerService?.GetAuthor()
-//                TitleNameTextView.text = musicPlayerService?.GetTitile()
-                DurationCurrentTextView.text = musicPlayerService?.GetAuthor()
-            }
-            handler.postDelayed(runnable, 2000)
+        runnable = O()
+        handler.postDelayed(runnable, 100)
+        if(position != musicPlayerService?.GetTrack()){
+            musicPlayerService?.SelectTrack(position)
         }
-        handler.postDelayed(runnable, 2000)
     }
 
+    inner class O : Runnable {
+        override fun run() {
+
+            if (isBound) {
+                DurationSeekBar.max = musicPlayerService!!.GetDuration()
+                DurationSeekBar.progress = musicPlayerService!!.GetPosition()
+                DurationCurrentTextView.text = minSecTime(musicPlayerService?.GetPosition())
+                DurationEndTextView.text = minSecTime(musicPlayerService?.GetDuration())
+                AuthorNameTextView.text = musicPlayerService?.GetAuthor()
+                TitleNameTextView.text = musicPlayerService?.GetTitile()
+                handler.postDelayed(this, 100)
+            }
+
+        }
+
+
+    }
+
+
     private fun minSecTime(msec: Int?): String {
-        if(msec == null) return minSecTime(0)
+        if (msec == null) return minSecTime(0)
         val sec: Int = msec / 1000
         val min: Int = (sec / 60)
         val restMin: Int = sec % 60
-        return if(restMin < 10) {
+        return if (restMin < 10) {
             "$min:0$restMin"
         } else {
             "$min:$restMin"
