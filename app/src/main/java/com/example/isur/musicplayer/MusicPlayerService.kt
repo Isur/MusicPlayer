@@ -131,6 +131,9 @@ class MusicPlayerService : Service() {
     }
 
     fun seekTo(msec: Int) {
+        if(!playing){
+            changeSong()
+        }
         mediaPlayer.seekTo(msec)
     }
 
