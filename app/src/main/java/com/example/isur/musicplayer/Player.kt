@@ -96,7 +96,6 @@ class Player : AppCompatActivity() {
         super.onPause()
         position = musicPlayerService?.getTrack() as Int
         currPos = musicPlayerService?.getPosition() as Int
-        handler.removeCallbacks(runnable)
         isBound = false
         unbindService(connection)
     }
