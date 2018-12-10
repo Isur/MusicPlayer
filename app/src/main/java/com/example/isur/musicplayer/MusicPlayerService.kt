@@ -143,13 +143,13 @@ class MusicPlayerService : Service() {
 
     fun isInit(): Boolean = init
 
-//    fun isRandom(): Boolean {
-//        return randomTrack
-//    }
-//
-//    fun isRepeat(): Boolean {
-//        return repeatList
-//    }
+    fun isRandom(): Boolean {
+        return randomTrack
+    }
+
+    fun isRepeat(): Boolean {
+        return repeatList
+    }
 
     private fun selectNextTrack(next: Boolean) {
         if (randomTrack) {

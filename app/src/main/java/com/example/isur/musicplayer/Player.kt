@@ -123,7 +123,7 @@ class Player : AppCompatActivity() {
         RandomTrackImageButton.setOnClickListener {
             musicPlayerService?.randomOnOff()
             randomOn = !randomOn
-            if (randomOn) {
+            if (musicPlayerService!!.isRandom()) {
                 RandomTrackImageButton.setImageResource(R.drawable.ic_shuffle_on)
             } else {
                 RandomTrackImageButton.setImageResource(R.drawable.ic_shuffle_off)
@@ -133,7 +133,7 @@ class Player : AppCompatActivity() {
         RepeatListImageButton.setOnClickListener {
             musicPlayerService?.repeatOnOff()
             repeatOn = !repeatOn
-            if (repeatOn) {
+            if (musicPlayerService!!.isRepeat()) {
                 RepeatListImageButton.setImageResource(R.drawable.ic_repeat_on)
             } else {
                 RepeatListImageButton.setImageResource(R.drawable.ic_repeat_off)
@@ -166,6 +166,7 @@ class Player : AppCompatActivity() {
     }
 
     inner class O : Runnable {
+        var done = false
         override fun run() {
             if (isBound) {
                 DurationSeekBar.max = musicPlayerService!!.getDuration()
@@ -174,10 +175,23 @@ class Player : AppCompatActivity() {
                 DurationEndTextView.text = minSecTime(musicPlayerService?.getDuration())
                 AuthorNameTextView.text = musicPlayerService?.getAuthor()
                 TitleNameTextView.text = musicPlayerService?.getTitle()
-                if (!musicPlayerService!!.isPlaying()) {
-                    PlayPauseImageButton.setImageResource(R.drawable.ic_play)
-                } else {
-                    PlayPauseImageButton.setImageResource(R.drawable.ic_pause)
+                if (!done) {
+                    if (!musicPlayerService!!.isPlaying()) {
+                        PlayPauseImageButton.setImageResource(R.drawable.ic_play)
+                    } else {
+                        PlayPauseImageButton.setImageResource(R.drawable.ic_pause)
+                    }
+                    if (musicPlayerService!!.isRepeat()) {
+                        RepeatListImageButton.setImageResource(R.drawable.ic_repeat_on)
+                    } else {
+                        RepeatListImageButton.setImageResource(R.drawable.ic_repeat_off)
+                    }
+                    if (musicPlayerService!!.isRandom()) {
+                        RandomTrackImageButton.setImageResource(R.drawable.ic_shuffle_on)
+                    } else {
+                        RandomTrackImageButton.setImageResource(R.drawable.ic_shuffle_off)
+                    }
+                    done = true
                 }
                 handler.postDelayed(this, 100)
             }
